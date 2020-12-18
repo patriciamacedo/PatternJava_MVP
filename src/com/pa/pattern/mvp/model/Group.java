@@ -1,26 +1,30 @@
-package com.pa.pattern.mvc.model;
+package com.pa.pattern.mvp.model;
 /**
  * @author patricia.macedo
  */
 
-import com.pa.pattern.observer.Subject;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
-public class Group extends Subject {
+public class Group {
 
     private String name;
-    private ArrayList<Programmer> personList;
+    private SimpleListProperty<Programmer> personList;
+    private SimpleDoubleProperty globalIndex;
+    private SimpleObjectProperty<Programmer> leader;
 
-    /**
-     *
-     * @param name of the group
-     */
     public Group(String name) {
+        ObservableList<Programmer> observableList = FXCollections.observableArrayList(new ArrayList<Programmer>());
+        personList = new SimpleListProperty<>(observableList);
         this.name = name;
-        personList = new ArrayList<>();
+        globalIndex=new SimpleDoubleProperty(0);
+        leader= new SimpleObjectProperty();
+        leader.set(new Programmer(0,"none",0,0));
+
     }
 
     /**
@@ -32,13 +36,16 @@ public class Group extends Subject {
         for (Programmer p : programmers)
             if(!personList.contains(p))
                 personList.add(p);
-        notifyObservers(this);
+
     }
 
     public void addMember(Programmer programmer) {
-        if(!personList.contains(programmer))
+        if(!personList.contains(programmer)) {
             personList.add(programmer);
-        notifyObservers(this);
+            this.globalIndex.set(calculateGlobalIndex());
+            this.leader.set(selectLeader());
+        }
+
     }
 
     /**
@@ -48,7 +55,11 @@ public class Group extends Subject {
     public void removeMember(Programmer programmer) throws GroupException {
         if(personList.remove(programmer)==false)
             throw new GroupException(" does not exist to be removed");
-        notifyObservers(this);
+        else {
+            this.globalIndex.set(calculateGlobalIndex());
+
+            this.leader.set(selectLeader());
+        }
     }
 
     public String getName() {
@@ -60,7 +71,7 @@ public class Group extends Subject {
      *
      * @return the globalValueIndexoftheGroup
      */
-    public float calculateGlobalIndex() {
+    private float calculateGlobalIndex() {
         int value = 0;
         float res = 0.0f;
         if (personList.size() == 0) return 0;
@@ -74,15 +85,22 @@ public class Group extends Subject {
     }
 
 
+    public double getGlobalIndex() {
+        return globalIndex.get();
+    }
+
+    public SimpleDoubleProperty globalIndexProperty() {
+        return globalIndex;
+    }
 
     /**
      * Select the programmer with expert in more number of languages
      * @return the Leader of the group
      */
-    public Programmer selectLeader() {
+    private Programmer selectLeader() {
         int max = -1;
 
-        Programmer leader=null;
+        Programmer leader=new Programmer(0,"none",0,0);
         for (Programmer prog : personList) {
             if (prog.getNumberLanguages() > max) {
                 max = prog.getNumberLanguages();
@@ -100,8 +118,15 @@ public class Group extends Subject {
         return name;
     }
 
-    public Collection<Programmer> getPersonList() {
-        List<Programmer> list= new ArrayList(this.personList);
-        return list;
+    public SimpleListProperty<Programmer> getPersonList() {
+        return personList;
+    }
+
+    public Programmer getLeader() {
+        return leader.get();
+    }
+
+    public SimpleObjectProperty leaderProperty() {
+        return leader;
     }
 }

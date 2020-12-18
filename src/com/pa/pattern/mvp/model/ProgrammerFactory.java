@@ -1,10 +1,13 @@
-package com.pa.pattern.modelview.model;
+package com.pa.pattern.mvp.model;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ProgrammerFactory {
 
+    /**
+     * Class to support the example - Encpsulate the creation of a base list of Programmers
+     */
     private static Map<Integer, Programmer> programmerMap = generateProgrammerList();
 
     private static Map<Integer, Programmer> generateProgrammerList() {
@@ -20,18 +23,24 @@ public class ProgrammerFactory {
         programmerMap.put(7, new Programmer(7, "Sonia",15,4));
         programmerMap.put(8, new Programmer(9, "Sofia",10,4));
         programmerMap.put(9, new Programmer(10, "Pedro",15,14));
-        programmerMap.put(10,new Programmer(11, "Alberto",11,5));
+        programmerMap.put(10, new Programmer(11, "Alberto",11,5));
         programmerMap.put(11, new Programmer(12, "Andre",16,2));
         programmerMap.put(12, new Programmer(13, "Sara",5,4));
         programmerMap.put(13, new Programmer(14, "Marta",15,2));
+
         return programmerMap;
 
     }
 
+    /**
+     *
+     * @param id - id of the programmer to lookfor
+     * @return a programmer with a sepcific id
+     */
     public static Programmer getProgrammer(int id) {
 
         Programmer p = programmerMap.get(id);
-        if (p == null) throw new GroupException("product " + id + " does not exist");
+        if (p == null) throw new GroupException("Programmer " + id + " does not exist");
         return p;
 
     }

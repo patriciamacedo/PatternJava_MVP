@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MVCPatternJava.iml" filepath="$PROJECT_DIR$/MVCPatternJava.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MVPPatternJava.iml" filepath="$PROJECT_DIR$/MVPPatternJava.iml" />
     </modules>
   </component>
 </project>

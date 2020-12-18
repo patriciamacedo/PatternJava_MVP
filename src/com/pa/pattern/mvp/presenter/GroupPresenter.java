@@ -3,32 +3,26 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.pa.pattern.mvc.controller;
+package com.pa.pattern.mvp.presenter;
 
 
-import com.pa.pattern.mvc.model.Group;
-import com.pa.pattern.mvc.model.GroupException;
-import com.pa.pattern.mvc.model.Programmer;
-import com.pa.pattern.mvc.model.ProgrammerFactory;
-import com.pa.pattern.mvc.view.GroupUI;
-
-import java.util.Collection;
+import com.pa.pattern.mvp.model.*;
+import com.pa.pattern.mvp.view.GroupUI;
 
 /**
  *
  * @author patriciamacedo
  */
-public class GroupController {
+public class GroupPresenter {
     
     
     private final GroupUI view;
     private final Group model;
 
 
-    public GroupController(GroupUI view, Group model) {
+    public GroupPresenter(GroupUI view, Group model) {
         this.view = view;
         this.model = model;
-        model.addObservers(view);
     }
 
     /**

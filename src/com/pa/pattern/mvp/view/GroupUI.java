@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.pa.pattern.mvc.view;
+package com.pa.pattern.mvp.view;
 
 
 
 
-import com.pa.pattern.mvc.model.Programmer;
+import com.pa.pattern.mvp.model.Programmer;
 
-import com.pa.pattern.mvc.controller.GroupController;
-import com.pa.pattern.mvc.model.Group;
-import com.pa.pattern.observer.Observer;
+import com.pa.pattern.mvp.presenter.GroupPresenter;
+import com.pa.pattern.mvp.model.Group;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,22 +22,23 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
-import java.util.Collection;
+import javafx.util.StringConverter;
+import javafx.util.converter.NumberStringConverter;
 
 
 /**
  *
  * @author patriciamacedo
  */
-public class GroupUI extends VBox implements Observer{
+public class GroupUI extends VBox {
 
     //controlos
     private TextField txtInputId;
     private Button btAdd;
     private ListView<Programmer> groupListView;
     private Label lblError;
-    private Label lblCount;
+    private TextField txtGlobalIndex;
+    private TextField txtLeader;
 
     //modelo
     private final Group model;
@@ -45,32 +46,43 @@ public class GroupUI extends VBox implements Observer{
     public GroupUI(Group model) {
         this.model = model;
         initComponents();
-        update(model);
+
     }
     
 
-    public void update(Object o) {
-        if(o instanceof Group) {
-            Group model = (Group)o;
-            Collection<Programmer> listProgrammers = model.getPersonList();
-            this.groupListView.getItems().clear();
-            groupListView.getItems().addAll(listProgrammers);
-            lblCount.setText(String.format("%.1f", model.calculateGlobalIndex()));
-        }
-    }
     
     private void initComponents() {
         
         this.txtInputId = new TextField();
         this.btAdd = new Button("Add");
-        this.groupListView = new ListView<>();
         lblError = new Label();
-        lblCount = new Label("0");
-        HBox firstRow = new HBox(txtInputId, btAdd, new Label("Total Value"),lblCount);
+        txtGlobalIndex = new TextField("0");
+        txtGlobalIndex.setEditable(false);
+        txtLeader = new TextField(model.getLeader().getName());
+        txtLeader.setEditable(false);
+        this.groupListView = new ListView<>();
+
+        //bindings
+
+       setBindings();
+
+        //compose panel
+
+        HBox firstRow = new HBox(txtInputId, btAdd, new Label("Global Index:"), txtGlobalIndex,new Label("Leader:") ,txtLeader);
         firstRow.setAlignment(Pos.CENTER);
         firstRow.setPadding(new Insets(2,2,2,2));
         firstRow.setSpacing(4);
         this.getChildren().addAll(firstRow, groupListView,lblError);
+    }
+
+    private void setBindings() {
+        this.groupListView.setItems(model.getPersonList());
+
+        Bindings.bindBidirectional(txtGlobalIndex.textProperty(),model.globalIndexProperty(),
+                new NumberStringConverter());
+
+        Bindings.bindBidirectional(txtLeader.textProperty(), model.leaderProperty(), new MyProgrammerConverter());
+
     }
 
 
@@ -79,7 +91,7 @@ public class GroupUI extends VBox implements Observer{
     }
 
 
-    public void setTriggers(GroupController controller) {
+    public void setTriggers(GroupPresenter controller) {
         btAdd.setOnAction((ActionEvent event) -> {
             controller.doAddMember();
         });
@@ -99,4 +111,17 @@ public class GroupUI extends VBox implements Observer{
         txtInputId.setText("");
     }
 
+    private class  MyProgrammerConverter extends StringConverter<Programmer> {
+
+
+        @Override
+        public String toString(Programmer object) {
+            return object.getName();
+        }
+
+        @Override
+        public Programmer fromString(String string) {
+            return null;
+        }
+    }
 }

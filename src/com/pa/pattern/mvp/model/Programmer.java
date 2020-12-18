@@ -1,4 +1,4 @@
-package com.pa.pattern.modelview.model;
+package com.pa.pattern.mvp.model;
 
 import java.util.Objects;
 
@@ -20,17 +20,12 @@ public class Programmer {
         this.numberLanguages = numberLanguages;
     }
 
-    public Programmer() {
-
-    }
-
     public int getId() {
         return id;
     }
 
-    @Override
-    public String toString() {
-        return String.format("%d:%s: Years:%d LG:%d", id,name,yearsOfExperience,numberLanguages);
+    public String getName() {
+        return name;
     }
 
     public int getYearsOfExperience() {
@@ -53,5 +48,10 @@ public class Programmer {
     @Override
     public int hashCode() {
         return Objects.hash(id, name);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%d:%s: Years:%d LG:%d", getId(),getName(),getYearsOfExperience(),getNumberLanguages());
     }
 }

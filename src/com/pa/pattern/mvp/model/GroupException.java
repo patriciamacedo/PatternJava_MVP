@@ -1,4 +1,4 @@
-package com.pa.pattern.mvc.model;
+package com.pa.pattern.mvp.model;
 
 public class GroupException extends RuntimeException {
     public GroupException(String s) {
