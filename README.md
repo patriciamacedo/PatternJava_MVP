@@ -81,7 +81,7 @@
     }
    ```
   
-   3 - Na classe `` GroupGUI`` tem que se conectar os elementos através do binding (nno método ``initComponents()``)
+   3 - Na classe `` GroupGUI`` tem que se conectar os elementos através do binding (no método ``setBindings()``)
   
   ```java
           groupListView.setItems(model.getPersonList());
